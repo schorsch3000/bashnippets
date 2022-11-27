@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+if [[ $(realpath "${BASH_SOURCE[0]}") == "$(realpath "$0")" ]]; then
+	batorcat() {
+		command -v bat >/dev/null && {
+			bat - --language=bash --color=always --style=numbers --pager=cat
+			return
+		}
+		command -v batcat >/dev/null && {
+			batcat - --language=bash --color=always --style=numbers --pager=cat
+			return
+		}
+		cat -
+	}
+
+	case "$1" in
+	"preview")
+		mark='\e[7m'
+		unmark='\e[0m'
+		cd "$HOME/.config/bashnippets/snippets" || exit 1
+		data="$(head -n-1 "$2")"
+		cursor_pos="$(tail -n1 "$2")"
+		echo -e "${data:0:$cursor_pos}$mark${data:$cursor_pos:1}$unmark${data:$cursor_pos+1}" | batorcat
+
+		;;
+
+	esac
+
+else
+	_BASHNIPPETS() {
+
+		local snippets_dir
+		local fzf_result
+		local me
+		me="$(realpath "${BASH_SOURCE[0]}")"
+		snippets_dir="$HOME/.config/bashnippets/snippets"
+		test -d "$snippets_dir" || mkdir -p "$snippets_dir"
+
+		fzf_result="$(
+			{ cd "$snippets_dir" || exit 1; }
+			find . -type f | sed 's/^..//' | fzf --preview "\"$me\" preview {}" -1 -q "$READLINE_LINE"
+		)"
+		if [[ $? -eq 0 ]]; then
+			READLINE_LINE="$(head -n-1 "$snippets_dir/$fzf_result")"
+			READLINE_POINT="$(tail -n1 "$snippets_dir/$fzf_result")"
+		fi
+
+	}
+
+	bind -x '"\C-x\C-x": _BASHNIPPETS'
+fi
