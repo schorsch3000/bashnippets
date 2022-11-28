@@ -39,4 +39,4 @@ Apart from bash and it's builtins, bashnippets uses the following commands
 - fzf
 - realpath
 - sed
-- bat (bil be fallback to cat if not available)
+- bat (will be fallback to cat if not available)
