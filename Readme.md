@@ -25,6 +25,8 @@ will set the cursor here:
         ls -l
         ------^
 
+Alternatively cou can wirte out your snippet, position the curser at the position you whant to be if cou recall the sniped and hit `Ctrl+x Ctrl+r` to save the snippet.
+
 ## Snapping
 To snap a snippet, just press `CTRL + x` twice:
 
