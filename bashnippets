@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ $(realpath "${BASH_SOURCE[0]}") == "$(realpath "$0")" ]]; then
+if [[ $(realpath -- "${BASH_SOURCE[0]}") == "$(realpath -- "$0")" ]]; then
 	batorcat() {
 		command -v bat >/dev/null && {
 			bat - --language=bash --color=always --style=numbers --pager=cat
@@ -27,7 +27,7 @@ else
 		local snippets_dir
 		local fzf_result
 		local me
-		me="$(realpath "${BASH_SOURCE[0]}")"
+		me="$(realpath -- "${BASH_SOURCE[0]}")"
 		snippets_dir="$HOME/.config/bashnippets/snippets"
 		test -d "$snippets_dir" || mkdir -p "$snippets_dir"
 		fzf_result="$(
@@ -42,13 +42,14 @@ else
 	_BASHNIPPETS_STORE() {
 		local tempfile
 		tempfile="$(mktemp)"
-		dialog --inputbox "What should be the name for that snippet?" 8 45 2>"$tempfile"
+		dialog --inputbox "What should be the name for that snippet?" 8 45 2>|"$tempfile"
 		if [[ $? -ne 0 ]]; then
 			echo Too bad >&2
 			return 1
 		fi
 		local name
 		name="$(<"$tempfile")"
+		rm "$tempfile"
 		local snippets_dir
 		snippets_dir="$HOME/.config/bashnippets/snippets"
 		test -d "$snippets_dir" || mkdir -p "$snippets_dir"
@@ -59,7 +60,6 @@ else
 		echo "$READLINE_LINE" >"$snippets_dir/$name"
 		echo "$READLINE_POINT" >>"$snippets_dir/$name"
 		echo "saved at $name"
-
 	}
 
 	bind -x '"\C-x\C-x": _BASHNIPPETS_RECALL'
