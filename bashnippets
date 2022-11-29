@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ $(realpath "${BASH_SOURCE[0]}") == "$(realpath "$0")" ]]; then
+if [[ $(realpath -- "${BASH_SOURCE[0]}") == "$(realpath -- "$0")" ]]; then
 	batorcat() {
 		command -v bat >/dev/null && {
 			bat - --language=bash --color=always --style=numbers --pager=cat
@@ -27,7 +27,7 @@ else
 		local snippets_dir
 		local fzf_result
 		local me
-		me="$(realpath "${BASH_SOURCE[0]}")"
+		me="$(realpath -- "${BASH_SOURCE[0]}")"
 		snippets_dir="$HOME/.config/bashnippets/snippets"
 		test -d "$snippets_dir" || mkdir -p "$snippets_dir"
 		fzf_result="$(
@@ -59,7 +59,6 @@ else
 		echo "$READLINE_LINE" >"$snippets_dir/$name"
 		echo "$READLINE_POINT" >>"$snippets_dir/$name"
 		echo "saved at $name"
-
 	}
 
 	bind -x '"\C-x\C-x": _BASHNIPPETS_RECALL'
