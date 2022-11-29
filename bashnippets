@@ -49,6 +49,7 @@ else
 		fi
 		local name
 		name="$(<"$tempfile")"
+		rm "$tempfile"
 		local snippets_dir
 		snippets_dir="$HOME/.config/bashnippets/snippets"
 		test -d "$snippets_dir" || mkdir -p "$snippets_dir"
