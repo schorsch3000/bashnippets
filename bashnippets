@@ -42,7 +42,7 @@ else
 	_BASHNIPPETS_STORE() {
 		local tempfile
 		tempfile="$(mktemp)"
-		dialog --inputbox "What should be the name for that snippet?" 8 45 2>"$tempfile"
+		dialog --inputbox "What should be the name for that snippet?" 8 45 2>|"$tempfile"
 		if [[ $? -ne 0 ]]; then
 			echo Too bad >&2
 			return 1
